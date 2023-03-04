@@ -1,15 +1,35 @@
 "use client";
 import Link from "next/link";
 import { usePathname, useSearchParams } from "next/navigation";
+import { useEffect, useState } from "react";
 function PaginationButtons() {
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const searchTerm = useSearchParams().get("searchTerm");
   const startIndex = +searchParams.get("start") || 1;
+  const [showScroll, setShowScroll] = useState(false);
+
+  const checkScrollTop = () => {
+    if (!showScroll && window.pageYOffset > 400) {
+      setShowScroll(true);
+    } else if (showScroll && window.pageYOffset <= 400) {
+      setShowScroll(false);
+    }
+  };
+
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0 });
+  };
+
+  useEffect(() => {
+    window.addEventListener("scroll", checkScrollTop);
+    return () => window.removeEventListener("scroll", checkScrollTop);
+  }, [showScroll]);
   return (
     <div className="flex justify-between px-10 pb-4 text-blue-700 sm:justify-start sm:space-x-44 sm:px-0">
       {startIndex >= 10 && (
         <Link
+          onClick={scrollToTop}
           href={`${pathname}?searchTerm=${searchTerm}&start=${startIndex - 10}`}
         >
           <div className="flex cursor-pointer flex-col items-center hover:underline">
@@ -34,6 +54,7 @@ function PaginationButtons() {
       )}
       {startIndex <= 90 && (
         <Link
+          onClick={scrollToTop}
           href={`${pathname}?searchTerm=${searchTerm}&start=${startIndex + 10}`}
         >
           <div className="flex cursor-pointer flex-col items-center hover:underline">
