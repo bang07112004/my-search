@@ -1,5 +1,6 @@
+export const dynamic = "force-dynamic";
+
 import ImageSearchResults from "@/components/ImageSearchResults ";
-import WebSearchResults from "@/components/WebSearchResults";
 import Link from "next/link";
 
 export default async function ImageSearchPage({ searchParams }) {
